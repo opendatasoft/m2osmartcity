@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ODS Widgets Sandbox</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://opendatasoft.github.io/ods-widgets/dist/ods-widgets.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic,600,600italic,300,300italic,800,800italic'
+          rel='stylesheet' type='text/css'>
+
+    <style type="text/css">
+        html {
+            font-size: 14px;
+        }
+
+        body {
+            background-color: lightseagreen;
+            color: #333;
+            font-family: "Open Sans", sans-serif;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0;
+            color: white;
+        }
+
+        h2 {
+            font-weight: bold;
+            margin: 0;
+        }
+        .m2ocity {
+            background-color: white;
+            padding: 1rem 1.33rem;
+            display: inline-block;
+        }
+        .m2ocity__logo {
+            height: 20px;
+
+        }
+
+        .ods-tabs__tabs {
+            margin-bottom: 1rem;
+        }
+
+        .ods-tabs__tab {
+            font-size: 1.33rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 1rem 1.33rem;
+            cursor: pointer;
+            color: darkcyan;
+            display: inline-block;
+            border-bottom: 5px solid transparent;
+        }
+
+        .ods-tabs__tab:hover {
+            color: white;
+            text-decoration: none;
+        }
+
+        .ods-tabs__tab--active {
+            border-bottom: 5px solid white;
+            color: white;
+
+        }
+
+        section {
+            background-color: white;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .help-text {
+            font-style: italic;
+            color: #999;
+        }
+
+        .qualite__indicator {
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .qualite__indicator--status-A {
+            background-color: lightgreen;
+        }
+
+        .qualite__indicator--status-B {
+            background-color: lightyellow;
+        }
+
+        .qualite__indicator--status-C {
+            background-color: orange;
+        }
+
+        .qualite__indicator--status-D {
+            background-color: red;
+            color: white;
+        }
+
+        .qualite__indicator--status-E {
+            background-color: black;
+            color: white;
+        }
+
+        .qualite__indicator-value {
+            font-weight: bold;
+
+        }
+    </style>
+</head>
+<body>
+
+<div class="row">
+    <div class="col-sm-6">
+        <h1>Saint-Amand-Montrond</h1>
+    </div>
+    <div class="col-sm-6 text-right">
+        <a href="http://www.m2ocity.com/" class="m2ocity">
+            <img src="logo-m2ocity.png" class="m2ocity__logo">
+        </a>
+    </div>
+</div>
+
+<div ng-app="ods-widgets">
+
+    <div class="ods-tabs" ng-init="tab='conso'">
+        <div class="ods-tabs__tabs">
+            <a ng-click="tab='conso'" ng-class="{'ods-tabs__tab--active': tab == 'conso'}" class="ods-tabs__tab">Consommation
+                eau et énergie</a>
+            <a ng-click="tab='qualite'" ng-class="{'ods-tabs__tab--active': tab == 'qualite'}" class="ods-tabs__tab">Qualité
+                de vie</a>
+            <a ng-click="tab='carto'" ng-class="{'ods-tabs__tab--active': tab == 'carto'}" class="ods-tabs__tab">Cartographie</a>
+        </div>
+
+        <div class="ods-tabs__pane" ng-if="tab == 'conso'">
+            <section>
+                <h2>Synthèse 2015 pour l'ensemble des bâtiments</h2>
+                <i class="icon-warning-sign"></i> comment fait-on la différence entre usagers et entreprises ?
+                Besoin de préprocessing pour séparer les deux. <br/>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ods-dataset-context context="energy2014,energy2015"
+                                             energy2014-dataset="m2o_energy_consumption"
+                                             energy2014-parameters="{'disjunctive.siteref':'true','q': ''}"
+                                             energy2014-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                             energy2014-domain="jmorel"
+                                             energy2015-dataset="m2o_energy_consumption"
+                                             energy2015-parameters="{'disjunctive.siteref':'true','refine.date':'2015', 'sort': 'date'}"
+                                             energy2015-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                             energy2015-domain="jmorel"
+                        >
+                            <ods-results ods-results="items" ods-results-context="energy2015" ods-results-max="1">
+                                <div ng-if="items"
+                                     ng-init="energy2014.parameters.q = 'date:[2014 TO ' + (items[0].fields.date|momentadd:'year':-1) + ']'">
+                                    <!-- ng-init="energy2014.parameters.q = 'date:[' + (items[0].fields.date|momentadd:'year':-1|momentadd:'month':-3) + ' TO ' + (items[0].fields.date|momentadd:'year':-1) + ']';energy2015.parameters.q = 'date:[' + (items[0].fields.date|momentadd:'month':-3) + ' TO ' + (items[0].fields.date) + ']'"> -->
+
+                                    <div ods-analysis="totalEnergy2015"
+                                         ods-analysis-context="energy2015"
+                                         ods-analysis-serie-conso="SUM(conso)">
+                                    </div>
+                                    <div ods-analysis="totalEnergy2014"
+                                         ods-analysis-context="energy2014"
+                                         ods-analysis-serie-conso="SUM(conso)">
+                                    </div>
+
+                                    <h3>Energie</h3>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            Consommation à date : {{ totalEnergy2015.results[0].conso | number:0}} kWh
+                                        </div>
+                                        <div class="col-sm-6">
+                                            Variation par rapport à 2014:
+                                            {{ ((totalEnergy2015.results[0].conso - totalEnergy2014.results[0].conso) /
+                                            totalEnergy2014.results[0].conso * 100)|number:0 }}%
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <ods-chart timescale="year">
+                                                <ods-chart-query context="energy2015" field-x="date" timescale="month">
+                                                    <ods-chart-serie expression-y="conso" chart-type="column"
+                                                                     function-y="SUM"
+                                                                     color="#66c2a5"></ods-chart-serie>
+                                                </ods-chart-query>
+                                            </ods-chart>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ods-results>
+                        </ods-dataset-context>
+                    </div>
+                    <div class="col-sm-6">
+                        <ods-dataset-context context="water2014,water2015"
+                                             water2014-dataset="m2o_water_index"
+                                             water2014-parameters="{'disjunctive.siteref':'true','q': '', 'refine.site': 'SaintAmandMontrond'}"
+                                             water2014-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                             water2014-domain="jmorel"
+                                             water2015-dataset="m2o_water_index"
+                                             water2015-parameters="{'disjunctive.siteref':'true','refine.date':'2015', 'refine.site': 'SaintAmandMontrond', 'sort': 'date'}"
+                                             water2015-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                             water2015-domain="jmorel"
+                        >
+                            <ods-results ods-results="items" ods-results-context="water2015" ods-results-max="1">
+                                <div ng-if="items"
+                                     ng-init="water2014.parameters.q = 'date:[2014 TO ' + (items[0].fields.date|momentadd:'year':-1) + ']'">
+                                    <div ods-analysis="totalWater2015"
+                                         ods-analysis-context="water2015"
+                                         ods-analysis-serie-conso="SUM(conso)">
+                                    </div>
+                                    <div ods-analysis="totalWater2014"
+                                         ods-analysis-context="water2014"
+                                         ods-analysis-serie-conso="SUM(conso)">
+                                    </div>
+
+                                    <h3>Eau</h3>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            Consommation à date : {{ totalWater2015.results[0].conso | number:0}} m<sup>3</sup>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            Variation par rapport à 2014 :
+                                            {{ ((totalWater2015.results[0].conso - totalWater2014.results[0].conso) /
+                                            totalWater2014.results[0].conso * 100)|number:0 }}%
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <ods-chart timescale="year">
+                                                <ods-chart-query context="water2015" field-x="date" timescale="month">
+                                                    <ods-chart-serie expression-y="conso" chart-type="column"
+                                                                     function-y="SUM"
+                                                                     color="#66c2a5"></ods-chart-serie>
+                                                </ods-chart-query>
+                                            </ods-chart>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ods-results>
+                        </ods-dataset-context>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <ods-dataset-context context="energy2014,energy2015,water2014,water2015,temperature"
+                                     energy2014-dataset="m2o_energy_consumption"
+                                     energy2014-parameters="{'disjunctive.siteref':'true','q': '', 'refine.siteref': 'SAMEXPO'}"
+                                     energy2014-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     energy2014-domain="jmorel"
+                                     energy2015-dataset="m2o_energy_consumption"
+                                     energy2015-parameters="{'disjunctive.siteref':'true','refine.date':'2015', 'sort': 'date', 'refine.siteref': 'SAMEXPO'}"
+                                     energy2015-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     energy2015-domain="jmorel"
+                                     water2014-dataset="m2o_water_index"
+                                     water2014-parameters="{'disjunctive.siteref':'true','q': '', 'refine.site': 'SaintAmandMontrond', 'refine.siteref': 'SAMEXPO'}"
+                                     water2014-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     water2014-domain="jmorel"
+                                     water2015-dataset="m2o_water_index"
+                                     water2015-parameters="{'disjunctive.siteref':'true','refine.date':'2015', 'refine.site': 'SaintAmandMontrond', 'sort': 'date', 'refine.siteref': 'SAMEXPO'}"
+                                     water2015-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     water2015-domain="jmorel"
+                                     temperature-dataset="m2o_temperature"
+                                     temperature-parameters="{'refine.site':'SaintAmandMontrond', 'sort': 'date', 'q': '', 'refine.siteref': 'SAMEXPO'}"
+                                     temperature-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     temperature-domain="jmorel"
+                >
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h2>Consommation détaillée</h2>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            Pour le bâtiment
+                            <select ng-model="currentSiteRef"
+                                    ng-init="currentSiteRef='SAMEXPO'"
+                                    ng-change="energy2015.parameters['refine.siteref']=currentSiteRef;energy2014.parameters['refine.siteref']=currentSiteRef;water2015.parameters['refine.siteref']=currentSiteRef;water2014.parameters['refine.siteref']=currentSiteRef;temperature.parameters['refine.siteref']=currentSiteRef;">
+                                <option value="SAMEXPO">Centre des expositions</option>
+                                <option value="MAISON DES SYNDICATS">Maison des syndicats</option>
+                                <option value="SALLE DE BAL">Salle de bal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <ods-results ods-results="items" ods-results-context="energy2015" ods-results-max="1">
+                                <div ng-if="items"
+                                     ng-init="energy2014.parameters.q = 'date:[2014 TO ' + (items[0].fields.date|momentadd:'year':-1) + ']'">
+                                    <div ods-analysis="totalEnergy2015"
+                                         ods-analysis-context="energy2015"
+                                         ods-analysis-serie-conso="SUM(conso)">
+                                    </div>
+                                    <div ods-analysis="totalEnergy2014"
+                                         ods-analysis-context="energy2014"
+                                         ods-analysis-serie-conso="SUM(conso)">
+                                    </div>
+
+                                    <h3>Energie</h3>
+
+                                    <div class="row">
+                                        <div class="col-sm-6 text-center">
+                                            Consommation à date <br>
+                                            <strong>{{ totalEnergy2015.results[0].conso | number:0}} kWh</strong>
+                                        </div>
+                                        <div class="col-sm-6 text-center">
+                                            Variation annuelle<br>
+                                            <strong>
+                                                {{ ((totalEnergy2015.results[0].conso -
+                                                totalEnergy2014.results[0].conso) / totalEnergy2014.results[0].conso *
+                                                100)|number:0 }}%
+                                            </strong>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <ods-chart timescale="year">
+                                                <ods-chart-query context="energy2015" field-x="date" timescale="month">
+                                                    <ods-chart-serie expression-y="conso"
+                                                                     chart-type="column"
+                                                                     function-y="SUM"
+                                                                     color="#66c2a5"></ods-chart-serie>
+                                                </ods-chart-query>
+                                            </ods-chart>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ods-results>
+                        </div>
+                        <div class="col-sm-4">
+                            <ods-results ods-results="items" ods-results-context="water2015" ods-results-max="1">
+                                <div ng-if="items"
+                                     ng-init="water2014.parameters.q = 'date:[2014 TO ' + (items[0].fields.date|momentadd:'year':-1) + ']'">
+                                    <div ods-analysis="totalWater2015"
+                                         ods-analysis-context="water2015"
+                                         ods-analysis-serie-conso="SUM(conso)">
+                                    </div>
+                                    <div ods-analysis="totalWater2014"
+                                         ods-analysis-context="water2014"
+                                         ods-analysis-serie-conso="SUM(conso)">
+                                    </div>
+
+                                    <h3>Eau</h3>
+
+                                    <div class="row">
+                                        <div class="col-sm-6 text-center">
+                                            Consommation à date <br>
+                                            <strong>{{ totalWater2015.results[0].conso | number:0}} m<sup>3</sup></strong>
+                                        </div>
+                                        <div class="col-sm-6 text-center">
+                                            Variation annuelle<br>
+                                            <strong>
+                                                {{ ((totalWater2015.results[0].conso -
+                                                totalWater2014.results[0].conso) / totalWater2014.results[0].conso *
+                                                100)|number:0 }}%
+                                            </strong>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <ods-chart timescale="year">
+                                                <ods-chart-query context="water2015" field-x="date" timescale="month">
+                                                    <ods-chart-serie expression-y="conso" chart-type="column" function-y="SUM"
+                                                                     color="#66c2a5"></ods-chart-serie>
+                                                </ods-chart-query>
+                                            </ods-chart>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ods-results>
+                        </div>
+                        <div class="col-sm-4">
+                            <ods-results ods-results="items" ods-results-context="temperature" ods-results-max="1">
+                                <div ng-if="items"
+                                     ng-init="temperature.parameters.q = 'date>=' + (items[0].fields.date|momentadd:'month':-6)">
+                                    <div class="pull-right" style="margin-top: 5px;">
+                                        actuellement <strong>{{ items[0].fields.value }}°C</strong>
+                                    </div>
+                                    <h3>
+                                        Temperature
+                                    </h3>
+
+                                    <p>
+                                        Déviation standard de la température au cours des 6 derniers mois.
+                                    </p>
+                                    <ods-chart timescale="year" single-y-axis="true">
+                                        <ods-chart-query context="temperature"
+                                                         field-x="date"
+                                                         timescale="day">
+                                            <ods-chart-serie expression-y="value"
+                                                             chart-type="column"
+                                                             function-y="STDDEV"
+                                                             color="#2f7ed8"
+                                                             label-y="déviation standard"
+                                                             color-thresholds="[{'value': 4, 'color': '#ff0000'}]"></ods-chart-serie>
+                                            <ods-chart-serie expression-y="4"
+                                                             chart-type="line"
+                                                             function-y="CONSTANT"
+                                                             label-y="Niveau d'alerte"
+                                                             color="#ff0000"></ods-chart-serie>
+                                        </ods-chart-query>
+                                    </ods-chart>
+                                </div>
+                            </ods-results>
+                        </div>
+                    </div>
+                </ods-dataset-context>
+            </section>
+        </div>
+        <div class="ods-tabs__pane" ng-if="tab == 'qualite'">
+
+            <section>
+                <ods-dataset-context context="co2,temp,hygro,covt,covl,bienetrevivre"
+                                     co2-dataset="m2o_indoor_air_quality"
+                                     co2-parameters="{'refine.siteref': 'Halte Garderie','refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur CO2'}"
+                                     co2-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     co2-domain="jmorel"
+                                     temp-dataset="m2o_indoor_air_quality"
+                                     temp-parameters="{'refine.siteref': 'Halte Garderie','refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur Temp'}"
+                                     temp-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     temp-domain="jmorel"
+                                     hygro-dataset="m2o_indoor_air_quality"
+                                     hygro-parameters="{'refine.siteref': 'Halte Garderie','refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur Hygro'}"
+                                     hygro-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     hygro-domain="jmorel"
+                                     covt-dataset="m2o_indoor_air_quality"
+                                     covt-parameters="{'refine.siteref': 'Halte Garderie','refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur COVT'}"
+                                     covt-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     covt-domain="jmorel"
+                                     covl-dataset="m2o_indoor_air_quality"
+                                     covl-parameters="{'refine.siteref': 'Halte Garderie','refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur COVL'}"
+                                     covl-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     covl-domain="jmorel"
+                                     bienetrevivre-dataset="m2o_indoor_air_quality_bien_vivre_bien_etre"
+                                     bienetrevivre-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     bienetrevivre-domain="jmorel"
+                >
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h2>
+                                Confort intérieur
+                            </h2>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            Valeurs pour le bâtiment
+                            <select ng-model="siteref"
+                                    ng-init="siteref='Halte Garderie'"
+                                    ng-change="co2.parameters['refine.siteref']=siteref;temp.parameters['refine.siteref']=siteref;hygro.parameters['refine.siteref']=siteref;covt.parameters['refine.siteref']=siteref;covl.parameters['refine.siteref']=siteref;">
+                                <option value="Halte Garderie">Halte garderie</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3>Indicateurs actuels</h3>
+                            <ods-results ods-results="items" ods-results-context="co2" ods-results-max="1">
+                                <p class="help-text">Date de la dernière mesure : {{
+                                    items[0].fields.date|moment:'LLL'}}</p>
+                            </ods-results>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4>Bien être</h4>
+
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <ods-results ods-results="items" ods-results-context="co2"
+                                                         ods-results-max="1">
+                                                <div class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                                    <div class="qualite__indicator-title">CO2</div>
+                                                    <div class="qualite__indicator-value">
+                                                        {{ items[0].fields.value_indicator}}
+                                                    </div>
+                                                </div>
+                                            </ods-results>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <ods-results ods-results="items" ods-results-context="temp"
+                                                         ods-results-max="1">
+                                                <div class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                                    <div class="qualite__indicator-title">Température</div>
+                                                    <div class="qualite__indicator-value">
+                                                        {{ items[0].fields.value_indicator }}
+                                                    </div>
+                                                </div>
+                                            </ods-results>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <ods-results ods-results="items" ods-results-context="hygro"
+                                                         ods-results-max="1">
+                                                <div class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                                    <div class="qualite__indicator-title">Hygrométrie</div>
+                                                    <div class="qualite__indicator-value">
+                                                        {{ items[0].fields.value_indicator}}
+                                                    </div>
+                                                </div>
+                                            </ods-results>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-12">
+                                    <h4>Bien vivre</h4>
+
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <ods-results ods-results="items" ods-results-context="covt"
+                                                         ods-results-max="1">
+                                                <div class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                                    <div class="qualite__indicator-title">COVT</div>
+                                                    <div class="qualite__indicator-value">
+                                                        {{ items[0].fields.value_indicator}}
+                                                    </div>
+                                                </div>
+                                            </ods-results>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <ods-results ods-results="items" ods-results-context="covl"
+                                                         ods-results-max="1">
+                                                <div class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                                    <div class="qualite__indicator-title">COVL</div>
+                                                    <div class="qualite__indicator-value">
+                                                        {{ items[0].fields.value_indicator }}
+                                                    </div>
+                                                </div>
+                                            </ods-results>
+                                        </div>
+                                    </div>
+
+                                    </ul>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-sm-6">
+                            <h3>Répartition (en pourcents) des indicateur au cours de l'année</h3>
+                            <ods-chart>
+                                <ods-chart-query context="bienetrevivre"
+                                                 field-x="sensor_type"
+                                                 stacked="percent"
+                                                 series-breakdown="value_indicator">
+                                    <ods-chart-serie expression-y="unique_ref"
+                                                     chart-type="bar"
+                                                     function-y="COUNT"
+                                                     color="range-RdYlGn">
+                                    </ods-chart-serie>
+                                </ods-chart-query>
+                            </ods-chart>
+                        </div>
+                    </div>
+
+
+                </ods-dataset-context>
+            </section>
+
+            <section>
+                <ods-dataset-context context="air,bruitjour,bruitnuit,airindic,bruitindic,samson"
+                                     air-dataset="m2o_outdoor_parameters_day_light"
+                                     air-parameters="{'refine.site':'SaintAmandMontrond','refine.date':'2015','refine.sensor_type':'O3', 'refine.siteref': 'Base nautique de Virlay', 'sort': 'date'}"
+                                     air-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     air-domain="jmorel"
+                                     airindic-dataset="m2o_outdoor_parameters"
+                                     airindic-parameters="{'refine.site':'SaintAmandMontrond','refine.date':'2015','refine.sensor_type':'Indicateur O3 jour', 'refine.siteref': 'Base nautique de Virlay', 'sort': 'date'}"
+                                     airindic-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     airindic-domain="jmorel"
+                                     bruitjour-dataset="m2o_outdoor_parameters_day_light"
+                                     bruitjour-parameters="{'refine.site':'SaintAmandMontrond','refine.jour':'nuit','refine.date':'2015','refine.sensor_type':'LAeq Histo', 'refine.siteref': 'Base nautique de Virlay', 'sort': 'date'}"
+                                     bruitjour-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     bruitjour-domain="jmorel"
+                                     bruitnuit-dataset="m2o_outdoor_parameters_day_light"
+                                     bruitnuit-parameters="{'refine.site':'SaintAmandMontrond','refine.jour':'jour','refine.date':'2015','refine.sensor_type':'LAeq Histo', 'refine.siteref': 'Base nautique de Virlay', 'sort': 'date'}"
+                                     bruitnuit-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     bruitnuit-domain="jmorel"
+                                     bruitindic-dataset="m2o_outdoor_parameters"
+                                     bruitindic-parameters="{'refine.site':'SaintAmandMontrond','refine.date':'2015','refine.sensor_type':'Indicateur elementaire', 'refine.siteref': 'Base nautique de Virlay', 'sort': 'date'}"
+                                     bruitindic-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     bruitindic-domain="jmorel"
+                                     samson-dataset="crowd-data-m2ocity"
+                                     samson-parameters="{'refine.timestamp':'2015','geofilter.polygon':'(46.68194987446882,2.399139404296875),(46.774436131415555,2.399139404296875),(46.774436131415555,2.616119384765625),(46.68194987446882,2.616119384765625),(46.68194987446882,2.399139404296875)'}"
+                                     samson-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                     samson-domain="jmorel"
+                >
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h2>Indicateurs ville</h2>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            Relevé de la balise
+                            <select ng-model="balise"
+                                    ng-init="balise = 'Base nautique de Virlay'"
+                                    ng-change="air.parameters['refine.siteref'] = balise;airindic.parameters['refine.siteref'] = balise;bruitnuit.parameters['refine.siteref'] = balise;bruitjour.parameters['refine.siteref'] = balise;bruitindic.parameters['refine.siteref'] = balise;">
+                                <option value="Base nautique de Virlay">Base nautique de Virlay</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div ng-if="balise" class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h3>Air</h3>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div ods-results="items" ods-results-context="airindic" ods-results-max="1">
+                                        <div class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                            <div class="qualite__indicator-title">Qualité de l'air actuelle</div>
+                                            <div class="qualite__indicator-value">
+                                                {{items[0].fields.value_indicator}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <ods-chart id="airchart">
+                                        <ods-chart-query context="air" field-x="date_quarter">
+                                            <ods-chart-serie expression-y="value" chart-type="line" function-y="AVG"
+                                                             color="custom-single-#2f7ed8">
+                                            </ods-chart-serie>
+                                        </ods-chart-query>
+                                    </ods-chart>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h3>Bruit</h3>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div ods-results="items" ods-results-context="bruitindic" ods-results-max="1">
+                                        <div class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                            <div class="qualite__indicator-title">Niveau de bruit actuel</div>
+                                            <div class="qualite__indicator-value">
+                                                {{items[0].fields.value_indicator}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div ods-results="items" ods-results-context="bruitnuit" ods-results-max="1">
+                                <div ng-if="items"
+                                     ng-init="bruitnuit.parameters.q = 'date>=' + (items[0].fields.date|momentadd:'month':-1);bruitjour.parameters.q = 'date>=' + (items[0].fields.date|momentadd:'month':-1);samson.parameters.q = 'timestamp>=' + (items[0].fields.date|momentadd:'month':-6)"></div>
+                            </div>
+
+                            <ods-chart single-y-axis="true">
+                                <ods-chart-query context="bruitjour" field-x="date" timescale="hour">
+                                    <ods-chart-serie expression-y="value"
+                                                     chart-type="scatter"
+                                                     function-y="AVG"
+                                                     label-y="Bruit de jour"
+                                                     color="custom-single-#ff9696"
+                                                     color-thresholds="[{'value': 50, 'color': '#ff9696'},{'value': 67, 'color': '#b20000'}]">
+                                    </ods-chart-serie>
+                                </ods-chart-query>
+                                <ods-chart-query context="bruitnuit" field-x="date" timescale="hour">
+                                    <ods-chart-serie expression-y="value"
+                                                     chart-type="scatter"
+                                                     function-y="AVG"
+                                                     label-y="Bruit de nuit"
+                                                     color="custom-single-#5672ff"
+                                                     color-thresholds="[{'value': 40, 'color': '#5672ff'},{'value': 66.75, 'color': '#031882'}]">
+                                    </ods-chart-serie>
+                                </ods-chart-query>
+                            </ods-chart>
+
+                            <div ods-analysis="samsonCount"
+                                 ods-analysis-context="samson"
+                                 ods-analysis-serie-count="COUNT()">
+                                Nombre de nouvelles mesures sur les 6 derniers mois de crowd_data situées dans la
+                                ville (compteur samson):
+                                {{ samsonCount.results[0].count * 9.2 | number:0 }}
+                            </div>
+
+                        </div>
+                    </div>
+                </ods-dataset-context>
+            </section>
+            <section>
+                <h2>Indicateurs externes</h2>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3>
+                            Météo du jour
+                        </h3>
+
+                        <p>
+                            <i class="icon-warning-sign"></i> En attente du widget
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <ods-twitter-timeline widget-id="660143590895656960"></ods-twitter-timeline>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="ods-tabs__pane" ng-if="tab == 'carto'">
+            <section>
+                <h2>Cartographie</h2d>
+            </section>
+        </div>
+    </div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular-sanitize.min.js"></script>
+<script type="text/javascript" src="https://opendatasoft.github.io/ods-widgets/dist/ods-widgets.js"></script>
+</body>
+</html>
