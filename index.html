@@ -34,22 +34,27 @@
             font-weight: bold;
             margin: 0;
         }
+
         .header,
-        .header h1{
+        .header h1 {
             line-height: 100px;
         }
+
         .m2ocity {
             background-color: white;
             padding: 0 1.33rem;
             display: inline-block;
         }
+
         .m2ocity__logo {
             height: 20px;
         }
+
         .stamand {
             background-color: white;
             display: inline-block;
         }
+
         .stamand__logo {
             height: 100px;
         }
@@ -361,7 +366,8 @@
                                     <div class="row">
                                         <div class="col-sm-6 text-center">
                                             Consommation à date <br>
-                                            <strong>{{ totalWater2015.results[0].conso | number:0}} m<sup>3</sup></strong>
+                                            <strong>{{ totalWater2015.results[0].conso | number:0}}
+                                                m<sup>3</sup></strong>
                                         </div>
                                         <div class="col-sm-6 text-center">
                                             Variation annuelle<br>
@@ -374,7 +380,8 @@
                                         <div class="col-xs-12">
                                             <ods-chart timescale="year">
                                                 <ods-chart-query context="water2015" field-x="date" timescale="month">
-                                                    <ods-chart-serie expression-y="conso" chart-type="column" function-y="SUM"
+                                                    <ods-chart-serie expression-y="conso" chart-type="column"
+                                                                     function-y="SUM"
                                                                      color="#66c2a5"></ods-chart-serie>
                                                 </ods-chart-query>
                                             </ods-chart>
@@ -567,7 +574,7 @@
             </section>
 
             <section>
-                <ods-dataset-context context="air,bruitjour,bruitnuit,airindic,bruitindic,samson"
+                <ods-dataset-context context="air,bruitjour,bruitnuit,airindic,bruitindic"
                                      air-dataset="m2o_outdoor_parameters_day_light"
                                      air-parameters="{'refine.site':'SaintAmandMontrond','refine.date':'2015','refine.sensor_type':'O3', 'refine.siteref': 'Base nautique de Virlay', 'sort': 'date'}"
                                      air-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
@@ -588,10 +595,6 @@
                                      bruitindic-parameters="{'refine.site':'SaintAmandMontrond','refine.date':'2015','refine.sensor_type':'Indicateur elementaire', 'refine.siteref': 'Base nautique de Virlay', 'sort': 'date'}"
                                      bruitindic-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
                                      bruitindic-domain="jmorel"
-                                     samson-dataset="crowd-data-m2ocity"
-                                     samson-parameters="{'refine.timestamp':'2015','geofilter.polygon':'(46.68194987446882,2.399139404296875),(46.774436131415555,2.399139404296875),(46.774436131415555,2.616119384765625),(46.68194987446882,2.616119384765625),(46.68194987446882,2.399139404296875)'}"
-                                     samson-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
-                                     samson-domain="jmorel"
                 >
                     <div class="row">
                         <div class="col-sm-6">
@@ -677,13 +680,6 @@
                                 </ods-chart-query>
                             </ods-chart>
 
-                            <div ods-analysis="samsonCount"
-                                 ods-analysis-context="samson"
-                                 ods-analysis-serie-count="COUNT()">
-                                Nombre de nouvelles mesures sur les 6 derniers mois de crowd_data situées dans la
-                                ville (compteur samson):
-                                {{ samsonCount.results[0].count * 9.2 | number:0 }}
-                            </div>
 
                         </div>
                     </div>
@@ -698,9 +694,34 @@
                             Météo du jour
                         </h3>
 
+                        <div>
+                            <script charset='UTF-8' src='http://www.meteofrance.com/mf3-rpc-portlet/rest/vignettepartenaire/181970/type/VILLE_FRANCE/size/PORTRAIT_VIGNETTE' type='text/javascript'></script>
+                        </div>
+
                         <p>
                             <i class="icon-warning-sign"></i> En attente du widget
                         </p>
+                        <h3>Samson</h3>
+                        <ods-dataset-context context="samson"
+                                             samson-dataset="crowd-data-m2ocity"
+                                             samson-parameters="{'refine.timestamp':'2015','geofilter.polygon':'(46.68194987446882,2.399139404296875),(46.774436131415555,2.399139404296875),(46.774436131415555,2.616119384765625),(46.68194987446882,2.616119384765625),(46.68194987446882,2.399139404296875)'}"
+                                             samson-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                             samson-domain="jmorel"
+                        >
+                            <div ods-analysis="samsonCount"
+                                 ods-analysis-context="samson"
+                                 ods-analysis-serie-count="COUNT()">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <img src="logo-samson.webp" style="width: 100%">
+                                    </div>
+                                    <div class="col-xs-6 text-center" style="line-height: 1rem">
+                                        <div>utilisations ce mois ci</div>
+                                        <div style="margin-top: 2rem; font-size: 2rem; font-weight: bold">{{ samsonCount.results[0].count * 9.2 | number:0 }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ods-dataset-context>
                     </div>
                     <div class="col-sm-6">
                         <ods-twitter-timeline widget-id="660143590895656960"></ods-twitter-timeline>
