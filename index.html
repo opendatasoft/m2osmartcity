@@ -34,14 +34,24 @@
             font-weight: bold;
             margin: 0;
         }
+        .header,
+        .header h1{
+            line-height: 100px;
+        }
         .m2ocity {
             background-color: white;
-            padding: 1rem 1.33rem;
+            padding: 0 1.33rem;
             display: inline-block;
         }
         .m2ocity__logo {
             height: 20px;
-
+        }
+        .stamand {
+            background-color: white;
+            display: inline-block;
+        }
+        .stamand__logo {
+            height: 100px;
         }
 
         .ods-tabs__tabs {
@@ -117,10 +127,17 @@
 <body>
 
 <div class="row">
-    <div class="col-sm-6">
-        <h1>Saint-Amand-Montrond</h1>
+    <div class="col-sm-2 text-left header">
+        <a href="http://www.ville-saint-amand-montrond.fr/" class="stamand">
+            <img src="logo-stamand.png" class="stamand__logo">
+        </a>
     </div>
-    <div class="col-sm-6 text-right">
+    <div class="col-sm-8 text-center header">
+        <h1>
+            Ville de Saint-Amand-Montrond
+        </h1>
+    </div>
+    <div class="col-sm-2 text-right header">
         <a href="http://www.m2ocity.com/" class="m2ocity">
             <img src="logo-m2ocity.png" class="m2ocity__logo">
         </a>
@@ -131,8 +148,9 @@
 
     <div class="ods-tabs" ng-init="tab='conso'">
         <div class="ods-tabs__tabs">
-            <a ng-click="tab='conso'" ng-class="{'ods-tabs__tab--active': tab == 'conso'}" class="ods-tabs__tab">Consommation
-                eau et énergie</a>
+            <a ng-click="tab='conso'" ng-class="{'ods-tabs__tab--active': tab == 'conso'}" class="ods-tabs__tab">
+                Eau & énergie
+            </a>
             <a ng-click="tab='qualite'" ng-class="{'ods-tabs__tab--active': tab == 'qualite'}" class="ods-tabs__tab">Qualité
                 de vie</a>
             <a ng-click="tab='carto'" ng-class="{'ods-tabs__tab--active': tab == 'carto'}" class="ods-tabs__tab">Cartographie</a>
@@ -141,8 +159,6 @@
         <div class="ods-tabs__pane" ng-if="tab == 'conso'">
             <section>
                 <h2>Synthèse 2015 pour l'ensemble des bâtiments</h2>
-                <i class="icon-warning-sign"></i> comment fait-on la différence entre usagers et entreprises ?
-                Besoin de préprocessing pour séparer les deux. <br/>
 
                 <div class="row">
                     <div class="col-sm-6">
@@ -451,11 +467,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3>Indicateurs actuels</h3>
-                            <ods-results ods-results="items" ods-results-context="co2" ods-results-max="1">
-                                <p class="help-text">Date de la dernière mesure : {{
-                                    items[0].fields.date|moment:'LLL'}}</p>
-                            </ods-results>
+                            <h3>Niveau de confort</h3>
 
                             <div class="row">
                                 <div class="col-sm-12">
@@ -534,7 +546,7 @@
 
                         </div>
                         <div class="col-sm-6">
-                            <h3>Répartition (en pourcents) des indicateur au cours de l'année</h3>
+                            <h3>Niveau moyen annuel</h3>
                             <ods-chart>
                                 <ods-chart-query context="bienetrevivre"
                                                  field-x="sensor_type"
@@ -583,7 +595,7 @@
                 >
                     <div class="row">
                         <div class="col-sm-6">
-                            <h2>Indicateurs ville</h2>
+                            <h2>Nuisances urbaines</h2>
                         </div>
                         <div class="col-sm-6 text-right">
                             Relevé de la balise
@@ -599,7 +611,7 @@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <h3>Air</h3>
+                                    <h3>Pollution atmosphérique (journée type)</h3>
                                 </div>
                                 <div class="col-sm-4">
                                     <div ods-results="items" ods-results-context="airindic" ods-results-max="1">
@@ -625,7 +637,7 @@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <h3>Bruit</h3>
+                                    <h3>Bruit (journée type)</h3>
                                 </div>
                                 <div class="col-sm-4">
                                     <div ods-results="items" ods-results-context="bruitindic" ods-results-max="1">
@@ -678,7 +690,7 @@
                 </ods-dataset-context>
             </section>
             <section>
-                <h2>Indicateurs externes</h2>
+                <h2>Vie de la ville</h2>
 
                 <div class="row">
                     <div class="col-sm-6">
