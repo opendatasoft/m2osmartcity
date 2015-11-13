@@ -114,15 +114,30 @@
         }
 
         .qualite__indicator--status-C {
-            background-color: orange;
+            background-color: yellow;
         }
 
         .qualite__indicator--status-D {
-            background-color: red;
+            background-color: orange;
             color: white;
         }
 
         .qualite__indicator--status-E {
+            background-color: darkorange;
+            color: white;
+        }
+
+        .qualite__indicator--status-F {
+            background-color: red;
+            color: white;
+        }
+
+        .qualite__indicator--status-G {
+            background-color: darkred;
+            color: white;
+        }
+
+        .qualite__indicator--status-H {
             background-color: black;
             color: white;
         }
@@ -131,6 +146,10 @@
             font-weight: bold;
 
         }
+
+        #airchart .highcharts-xaxis-labels text:nth-child(4n+2) { display: none; }
+        #airchart .highcharts-xaxis-labels text:nth-child(4n+3) { display: none; }
+        #airchart .highcharts-xaxis-labels text:nth-child(4n+4) { display: none; }
     </style>
 </head>
 <body>
@@ -207,10 +226,11 @@
                                             totalEnergy2014.results[0].conso * 100)|number:0 }}%
                                         </div>
                                         <div class="col-xs-12">
-                                            <ods-chart timescale="year">
+                                            <ods-chart display-legend="false" label-x="">
                                                 <ods-chart-query context="energy2015" field-x="date" timescale="month">
                                                     <ods-chart-serie expression-y="conso" chart-type="column"
                                                                      function-y="SUM"
+                                                                     label-y="kWh"
                                                                      color="#66c2a5"></ods-chart-serie>
                                                 </ods-chart-query>
                                             </ods-chart>
@@ -247,7 +267,7 @@
 
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            Consommation à date : {{ totalWater2015.results[0].conso | number:0}} m<sup>3</sup>
+                                            Consommation à date : {{ totalWater2015.results[0].conso / 1000 | number:0}} m<sup>3</sup>
                                         </div>
                                         <div class="col-sm-6">
                                             Variation par rapport à 2014 :
@@ -255,10 +275,11 @@
                                             totalWater2014.results[0].conso * 100)|number:0 }}%
                                         </div>
                                         <div class="col-xs-12">
-                                            <ods-chart timescale="year">
+                                            <ods-chart display-legend="false" label-x="">
                                                 <ods-chart-query context="water2015" field-x="date" timescale="month">
                                                     <ods-chart-serie expression-y="conso" chart-type="column"
                                                                      function-y="SUM"
+                                                                     label-y="m3"
                                                                      color="#66c2a5"></ods-chart-serie>
                                                 </ods-chart-query>
                                             </ods-chart>
@@ -339,11 +360,12 @@
                                             </strong>
                                         </div>
                                         <div class="col-xs-12">
-                                            <ods-chart timescale="year">
+                                            <ods-chart display-legend="false" label-x="">
                                                 <ods-chart-query context="energy2015" field-x="date" timescale="month">
                                                     <ods-chart-serie expression-y="conso"
                                                                      chart-type="column"
                                                                      function-y="SUM"
+                                                                     label-y="kWh"
                                                                      color="#66c2a5"></ods-chart-serie>
                                                 </ods-chart-query>
                                             </ods-chart>
@@ -382,10 +404,11 @@
                                             </strong>
                                         </div>
                                         <div class="col-xs-12">
-                                            <ods-chart timescale="year">
+                                            <ods-chart display-legend="false" label-x="">
                                                 <ods-chart-query context="water2015" field-x="date" timescale="month">
                                                     <ods-chart-serie expression-y="conso" chart-type="column"
                                                                      function-y="SUM"
+                                                                     label-y="m3"
                                                                      color="#66c2a5"></ods-chart-serie>
                                                 </ods-chart-query>
                                             </ods-chart>
@@ -408,7 +431,7 @@
                                     <p>
                                         Déviation standard de la température au cours des 6 derniers mois.
                                     </p>
-                                    <ods-chart timescale="year" single-y-axis="true">
+                                    <ods-chart label-x="" display-legend="false" single-y-axis="true">
                                         <ods-chart-query context="temperature"
                                                          field-x="date"
                                                          timescale="day">
@@ -558,7 +581,7 @@
                         </div>
                         <div class="col-sm-6">
                             <h3>Niveau moyen annuel</h3>
-                            <ods-chart>
+                            <ods-chart label-x="">
                                 <ods-chart-query context="bienetrevivre"
                                                  field-x="sensor_type"
                                                  stacked="percent"
@@ -566,6 +589,7 @@
                                     <ods-chart-serie expression-y="unique_ref"
                                                      chart-type="bar"
                                                      function-y="COUNT"
+                                                     label-y="Pourcentage"
                                                      color="range-RdYlGn">
                                     </ods-chart-serie>
                                 </ods-chart-query>
@@ -631,9 +655,12 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-12">
-                                    <ods-chart id="airchart">
+                                    <ods-chart id="airchart" label-x="">
                                         <ods-chart-query context="air" field-x="date_quarter">
-                                            <ods-chart-serie expression-y="value" chart-type="line" function-y="AVG"
+                                            <ods-chart-serie expression-y="value"
+                                                             chart-type="line"
+                                                             function-y="AVG"
+                                                             label-y="O3 (µg/m3)"
                                                              color="custom-single-#2f7ed8">
                                             </ods-chart-serie>
                                         </ods-chart-query>
@@ -644,7 +671,7 @@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <h3>Bruit (journée type)</h3>
+                                    <h3>Bruit (dernier mois)</h3>
                                 </div>
                                 <div class="col-sm-4">
                                     <div ods-results="items" ods-results-context="bruitindic" ods-results-max="1">
@@ -663,7 +690,7 @@
                                      ng-init="bruitnuit.parameters.q = 'date>=' + (items[0].fields.date|momentadd:'month':-1);bruitjour.parameters.q = 'date>=' + (items[0].fields.date|momentadd:'month':-1);samson.parameters.q = 'timestamp>=' + (items[0].fields.date|momentadd:'month':-6)"></div>
                             </div>
 
-                            <ods-chart single-y-axis="true">
+                            <ods-chart single-y-axis="true" label-x="Décibels">
                                 <ods-chart-query context="bruitjour" field-x="date" timescale="hour">
                                     <ods-chart-serie expression-y="value"
                                                      chart-type="scatter"
@@ -739,7 +766,270 @@
         </div>
         <div class="ods-tabs__pane" ng-if="tab == 'carto'">
             <section>
-                <h2>Cartographie</h2d>
+                <h2>Cartographie</h2>
+                <ods-dataset-context  context="map"
+                                      map-dataset="m2o_carto_saintamandmontrond"
+                                      map-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                      map-domain="jmorel"
+                        >
+                    <ods-map location="14,46.72153,2.51398">
+                        <ods-map-layer context="map"
+                                       color-by-field="type"
+                                       color-ranges="#49ecff;2;grey;7;green;8;#234fd3;9;red;10;brown;11;#6df283;12;dark"
+                                >
+                            <h2>
+                                {{ record.fields.siteref }}
+                            </h2>
+                            <ods-dataset-context context="co2,temp,hygro,covt,covl,bienetrevivre,waterindex,energy,indoorquality,airindic,bruitindic"
+                                                 indoorquality-dataset="m2o_indoor_air_quality_bien_vivre_bien_etre"
+                                                 indoorquality-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 indoorquality-domain="jmorel"
+                                                 energy-dataset="m2o_energy_consumption"
+                                                 energy-parameters="{'q':'date > #now(months=-1) ' +  record.fields.siteref}"
+                                                 energy-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 energy-domain="jmorel"
+                                                 co2-dataset="m2o_indoor_air_quality"
+                                                 co2-parameters="{'refine.siteref': record.fields.siteref,'refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur CO2'}"
+                                                 co2-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 co2-domain="jmorel"
+                                                 temp-dataset="m2o_indoor_air_quality"
+                                                 temp-parameters="{'refine.siteref': record.fields.siteref,'refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur Temp'}"
+                                                 temp-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 temp-domain="jmorel"
+                                                 hygro-dataset="m2o_indoor_air_quality"
+                                                 hygro-parameters="{'refine.siteref': record.fields.siteref,'refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur Hygro'}"
+                                                 hygro-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 hygro-domain="jmorel"
+                                                 covt-dataset="m2o_indoor_air_quality"
+                                                 covt-parameters="{'refine.siteref': record.fields.siteref,'refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur COVT'}"
+                                                 covt-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 covt-domain="jmorel"
+                                                 covl-dataset="m2o_indoor_air_quality"
+                                                 covl-parameters="{'refine.siteref': record.fields.siteref,'refine.site':'SaintAmandMontrond', 'sort':'date', 'refine.sensor_type': 'indicateur COVL'}"
+                                                 covl-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 covl-domain="jmorel"
+                                                 bienetrevivre-dataset="m2o_indoor_air_quality_bien_vivre_bien_etre"
+                                                 bienetrevivre-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 bienetrevivre-domain="jmorel"
+                                                 waterindex-dataset="m2o_water_index_with_sitetypo"
+                                                 waterindex-parameters="{'sort':'dateref','q':'dateref > #now(months=-4) ' +  record.fields.siteref}"
+                                                 waterindex-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 waterinder-domain="jmorel"
+                                                 airindic-dataset="m2o_outdoor_parameters"
+                                                 airindic-parameters="{'refine.site':'SaintAmandMontrond','refine.date':'2015','refine.sensor_type':'Indicateur O3 jour', 'q': record.fields.siteref, 'sort': 'date'}"
+                                                 airindic-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 airindic-domain="jmorel"
+                                                 bruitindic-dataset="m2o_outdoor_parameters"
+                                                 bruitindic-parameters="{'refine.site':'SaintAmandMontrond','refine.date':'2015','refine.sensor_type':'Indicateur elementaire', 'q': record.fields.siteref, 'sort': 'date'}"
+                                                 bruitindic-apikey="5c907191ee9d7359a429b2c73b095042899dc931d66723b39cb7ba58"
+                                                 bruitindic-domain="jmorel"
+                                    >
+
+                                <!-- EAU CONSO -->
+                                <div ods-analysis="totalWater"
+                                     ods-analysis-context="waterindex"
+                                     ods-analysis-serie-conso="SUM(conso)">
+                                </div>
+                                <div ng-if="totalWater.results[0].conso">
+                                    <h4>Eau</h4>
+                                    <p>
+                                        Consommation 4 derniers mois : {{ totalWater.results[0].conso / 1000 | number:0}} m<sup>3 <br />
+                                    </p>
+                                </div>
+
+
+                                <!-- ENERGY -->
+                                <div ods-analysis="totalEnergy"
+                                     ods-analysis-context="energy"
+                                     ods-analysis-serie-conso="SUM(conso)">
+                                </div>
+
+                                <div ng-if="totalEnergy.results[0].conso">
+                                    <h4>Energie</h4>
+                                    <p>
+                                        Consommation dernier mois : {{ totalEnergy.results[0].conso | number:0}} kWh <br />
+                                    </p>
+                                </div>
+
+                                <ods-result-enumerator context="indoorquality"
+                                                       max="1"
+                                        >
+                                    <strong>{{item.metas}}</strong>
+                                </ods-result-enumerator>
+
+
+                                <h2 ng-if="record.fields.siteref == 'Halte Garderie'">
+                                    Confort intérieur
+                                </h2>
+                                <h4 ng-if="record.fields.siteref == 'Halte Garderie'">Bien être</h4>
+                                <ods-results ods-results="items" ods-results-context="co2"
+                                             ods-results-max="1">
+
+                                    <div ng-if="items[0].fields.value_indicator" class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                        <div class="qualite__indicator-title">CO2</div>
+                                        <div class="qualite__indicator-value">
+                                            {{ items[0].fields.value_indicator}}
+                                        </div>
+                                    </div>
+                                </ods-results>
+                                <ods-results ods-results="items" ods-results-context="temp"
+                                             ods-results-max="1">
+                                    <div ng-if="items[0].fields.value_indicator" class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                        <div class="qualite__indicator-title">Température</div>
+                                        <div class="qualite__indicator-value">
+                                            {{ items[0].fields.value_indicator }}
+                                        </div>
+                                    </div>
+                                </ods-results>
+                                <ods-results ods-results="items" ods-results-context="hygro"
+                                             ods-results-max="1">
+                                    <div ng-if="items[0].fields.value_indicator" class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                        <div class="qualite__indicator-title">Hygrométrie</div>
+                                        <div class="qualite__indicator-value">
+                                            {{ items[0].fields.value_indicator}}
+                                        </div>
+                                    </div>
+                                </ods-results>
+                                <h4 ng-if="record.fields.siteref == 'Halte Garderie'">Bien vivre</h4>
+                                <ods-results ods-results="items" ods-results-context="covt"
+                                             ods-results-max="1">
+                                    <div ng-if="items[0].fields.value_indicator" class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                        <div class="qualite__indicator-title">COVT</div>
+                                        <div class="qualite__indicator-value">
+                                            {{ items[0].fields.value_indicator}}
+                                        </div>
+                                    </div>
+                                </ods-results>
+                                <ods-results ods-results="items" ods-results-context="covl"
+                                             ods-results-max="1">
+                                    <div ng-if="items[0].fields.value_indicator" class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                        <div class="qualite__indicator-title">COVL</div>
+                                        <div class="qualite__indicator-value">
+                                            {{ items[0].fields.value_indicator }}
+                                        </div>
+                                    </div>
+                                </ods-results>
+
+                                <div ods-results="items" ods-results-context="airindic" ods-results-max="1">
+                                    <div ng-if="items[0].fields.value_indicator" class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                        <div class="qualite__indicator-title">Qualité de l'air actuelle</div>
+                                        <div class="qualite__indicator-value">
+                                            {{items[0].fields.value_indicator}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ods-results="items" ods-results-context="bruitindic" ods-results-max="1">
+                                    <div ng-if="items[0].fields.value_indicator" class="qualite__indicator qualite__indicator--status-{{items[0].fields.value_indicator}}">
+                                        <div class="qualite__indicator-title">Niveau de bruit actuel</div>
+                                        <div class="qualite__indicator-value">
+                                            {{items[0].fields.value_indicator}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </ods-dataset-context>
+
+
+                        </ods-map-layer>
+                    </ods-map>
+                    <br/>
+                    <h4>
+                        Legende :
+                    </h4>
+                    <TABLE BORDER="0">
+                        <TR>
+                            <TH>
+                                <div id="legende1" style="border:solid 1px black;
+                                          background-color: #49ecff;
+                                          padding:10px;
+                                          width:20px;
+                                          ">
+                                </div>
+                            </TH>
+                            <TD style="padding-left:10px" > Conso d'Eau </TD>
+                        </TR>
+                        <TR>
+                            <TH>
+                                <div id="legende2" style="border:solid 1px black;
+                                          background-color: grey;
+                                          padding:10px;
+                                          width:20px;
+                                          ">
+                                </div>
+                            </TH>
+                            <TD style="padding-left:10px" > Batiment </TD>
+                        </TR>
+                        <TR>
+                            <TH>
+                                <div id="legend3" style="border:solid 1px black;
+                                         background-color:green;
+                                         padding:10px;
+                                         width:20px;
+                                         ">
+
+                                </div>
+                            </TH>
+                            <TD style="padding-left:10px" > Eco balise </TD>
+                        </TR>
+
+                        <TR>
+                            <TH>
+                                <div id="txtlegend5" style="border:solid 1px black;
+                                            background-color:#234fd3;
+                                            padding:10px;
+                                            width:20px;
+                                            ">
+
+                                </div>
+                            </TH>
+                            <TD style="padding-left:10px" > Qualité d'eau </TD>
+                        </TR>
+                        <TR>
+                            <TH>
+                                <div id="txtlegend6" style="border:solid 1px black;
+                                            background-color:red;
+                                            padding:10px;
+                                            width:20px;
+                                            ">
+
+                                </div>
+                            </TH>
+                            <TD style="padding-left:10px" > Prélocalisateur de fuite </TD>
+
+                        <TR> <TH>  </TH></TR>
+                        </TR>
+                        <TR>
+                            <TH>
+                                <div id="txtlegend6" style="border:solid 1px black;
+                                            background-color:brown;
+                                            padding:10px;
+                                            width:20px;
+                                            ">
+
+                                </div>
+                            </TH>
+                            <TD style="padding-left:10px" > Sonde de niveau </TD>
+
+                        <TR> <TH>  </TH></TR>
+                        </TR>
+                        <TR>
+                            <TH>
+                                <div id="txtlegend6" style="border:solid 1px black;
+                                            background-color:#6df283;
+                                            padding:10px;
+                                            width:20px;
+                                            ">
+
+                                </div>
+                            </TH>
+                            <TD style="padding-left:10px" > Arrosage </TD>
+
+                        <TR> <TH>  </TH></TR>
+                        </TR>
+
+                    </TABLE>
+
+                </ods-dataset-context>
             </section>
         </div>
     </div>
